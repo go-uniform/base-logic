@@ -43,6 +43,15 @@ func Execute(test bool, natsUri, environment, level string, rate int, handler di
 
 	d = diary.Dear(AppClient, AppProject, AppName, nil, "git@github.com:go-uniform/uniform.git", AppCommit, nil, nil, lvl, handler)
 	d.Page(-1, traceRate, true, AppName, nil, "", "", nil, func(p diary.IPage) {
+		p.Notice("base.execute", diary.M{
+			"testMode": testMode,
+			"nats": natsUri,
+			"env": environment,
+			"level": level,
+			"rate": rate,
+			"args": argsMap,
+		})
+
 		// subscribe all actions
 		for topic, handler := range actions {
 			p.Info("subscribe", diary.M{

@@ -59,7 +59,7 @@ func Execute(test bool, natsUri, environment, level string, rate int, handler di
 				"topic":   topic,
 				"handler": runtime.FuncForPC(reflect.ValueOf(handler).Pointer()).Name(),
 			})
-			subscription, err := c.QueueSubscribe(fmt.Sprintf("%s.%s", AppProject, topic), AppName, handler)
+			subscription, err := c.QueueSubscribe(topic, AppName, handler)
 			if err != nil {
 				p.Error("subscribe", "failed to subscribe for topic", diary.M{
 					"project": AppProject,

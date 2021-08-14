@@ -54,7 +54,7 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 
 	// handle the login otp scenario
 	if !request.Reset {
-		r.Conn().SendSmsTemplate(p, r.Remainder(), nil, "", "auth.otp.login.code", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.login.code", uniform.M{
 			"Name": contact.Name,
 			"Project": strings.ToTitle(AppProject),
 			"Code": *request.Code,
@@ -77,14 +77,14 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		panic(fmt.Sprintf("unsupported method `%s` given", request.Method))
 	case "code":
 		if contact.Email != "" {
-			r.Conn().SendEmailTemplate(p, r.Remainder(), nil, "", "from", "fromName", "auth.otp.reset.code", uniform.M{
+			r.Conn().SendEmailTemplate(p, r.Remainder(), MustAsset, "", "from", "fromName", "auth.otp.reset.code", uniform.M{
 				"Name": contact.Name,
 				"Project": strings.ToTitle(AppProject),
 				"Code": *request.Code,
 				"Env": EnvPrefix(),
 			}, contact.Email)
 		}
-		r.Conn().SendSmsTemplate(p, r.Remainder(), nil, "", "auth.otp.reset.code", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.reset.code", uniform.M{
 			"Name": contact.Name,
 			"Project": strings.ToTitle(AppProject),
 			"Code": *request.Code,
@@ -93,14 +93,14 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		break
 	case "link":
 		if contact.Email != "" {
-			r.Conn().SendEmailTemplate(p, r.Remainder(), nil, "", "from", "fromName", "auth.otp.reset.link", uniform.M{
+			r.Conn().SendEmailTemplate(p, r.Remainder(), MustAsset, "", "from", "fromName", "auth.otp.reset.link", uniform.M{
 				"Name": contact.Name,
 				"Project": strings.ToTitle(AppProject),
 				"Link": fmt.Sprintf("%s/#/password-reset-complete?token=%s", BaseAdministratorPortalUrl, *request.Token),
 				"Env": EnvPrefix(),
 			}, contact.Email)
 		}
-		r.Conn().SendSmsTemplate(p, r.Remainder(), nil, "", "auth.otp.reset.link", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.reset.link", uniform.M{
 			"Name": contact.Name,
 			"Project": strings.ToTitle(AppProject),
 			"Link": fmt.Sprintf("%s/#/password-reset-complete?token=%s", BaseAdministratorPortalUrl, *request.Token),

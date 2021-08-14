@@ -12,7 +12,6 @@ const (
 	AppProject = "uniform"
 	AppService = "service"
 	Database = AppProject
-	DatabaseTimeout = time.Second * 5
 	JwtExpiryTime = time.Hour * 24
 )
 

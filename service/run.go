@@ -8,7 +8,8 @@ import (
 const (
 	AppClient = "uprate"
 	AppProject = "uniform"
-	AppService = AppProject
+	AppService = "service"
+	Database = AppProject
 	DatabaseTimeout = time.Second * 5
 )
 

@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	subscribe(event("auth", "otp"), eventAuthJwt)
+	subscribe(event("auth", "jwt"), eventAuthJwt)
 }
 
 func eventAuthJwt(r uniform.IRequest, p diary.IPage) {

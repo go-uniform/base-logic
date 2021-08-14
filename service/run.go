@@ -2,12 +2,14 @@ package service
 
 import (
 	"github.com/go-diary/diary"
+	"time"
 )
 
 const (
 	AppClient = "uprate"
 	AppProject = "uniform"
 	AppService = AppProject
+	DatabaseTimeout = time.Second * 5
 )
 
 func Run(p diary.IPage) {

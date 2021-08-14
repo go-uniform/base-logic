@@ -1,0 +1,1 @@
+{{.Env}}Hi {{.Name}}, you are about to reset your {{.Project}} password. OTP: {{.Code}}

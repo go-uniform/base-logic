@@ -29,7 +29,7 @@ func master(r uniform.IRequest, p diary.IPage) {
 		LastName: request.LastName,
 		Email: request.Email,
 		Mobile: request.Mobile,
-	}, nil, TagsAdministrators)
+	}, nil, TagsAdministrator)
 
 	if r.CanReply() {
 		if err := r.Reply(uniform.Request{

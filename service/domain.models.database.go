@@ -29,6 +29,7 @@ type Administrator struct {
 	CreatedAt time.Time `bson:"createdAt"`
 	ModifiedAt time.Time `bson:"modifiedAt"`
 	DeletedAt *time.Time `bson:"deletedAt"`
+	BlockedAt *time.Time `bson:"blockedAt"`
 
 	// Fields
 	FirstName string `bson:"firstName"`

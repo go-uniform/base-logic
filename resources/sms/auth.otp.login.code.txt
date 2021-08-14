@@ -1,0 +1,1 @@
+{{.Env}}Hi {{.Name}}, you are about to log into your {{.Project}} account. OTP: {{.Code}}

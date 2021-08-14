@@ -43,6 +43,9 @@ func Run(p diary.IPage) {
 		break
 	case "dev":
 		break
+	case "test":
+		// used for automated testing sandbox environment
+		break
 	case "local":
 		break
 	}
@@ -58,6 +61,8 @@ var EnvPrefix = func() string {
 		return "[QA] "
 	case "dev":
 		return "[DEV] "
+	case "test":
+		return "[TEST] "
 	case "local":
 		return "[LOCAL] "
 	}

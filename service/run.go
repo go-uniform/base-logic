@@ -16,7 +16,7 @@ const (
 	JwtExpiryTime = time.Hour * 24
 )
 
-var Env string = "local"
+var Env string
 var BaseAdministratorPortalUrl = fmt.Sprintf("https://admin.%s.co.za", AppProject)
 var BaseApiUrl = fmt.Sprintf("https://api.%s.co.za", AppProject)
 var FromEmailAddress = fmt.Sprintf("noreply@%s.co.za", AppProject)
@@ -34,6 +34,7 @@ func Run(p diary.IPage) {
 	default:
 		panic(fmt.Sprintf("unknown environment `%s` given", Env))
 	case "prod":
+		// defaults are already set to run on local environment
 		break
 	case "demo":
 		break
@@ -44,7 +45,6 @@ func Run(p diary.IPage) {
 	case "dev":
 		break
 	case "local":
-		// defaults are already set to run on local environment
 		break
 	}
 }

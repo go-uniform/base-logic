@@ -7,7 +7,7 @@ import (
 const (
 	AppClient = "uprate"
 	AppProject = "uniform"
-	AppService = "service"
+	AppService = AppProject
 )
 
 func Run(p diary.IPage) {

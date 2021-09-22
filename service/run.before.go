@@ -4,15 +4,6 @@ import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"strings"
-	"time"
-)
-
-const (
-	AppClient = "uprate"
-	AppProject = "uniform"
-	AppService = "service"
-	Database = AppProject
-	JwtExpiryTime = time.Hour * 24
 )
 
 var Env string
@@ -21,7 +12,7 @@ var BaseApiUrl = fmt.Sprintf("https://api.%s.co.za", AppProject)
 var FromEmailAddress = fmt.Sprintf("noreply@%s.co.za", AppProject)
 var FromEmailName = strings.ToTitle(AppProject)
 
-func Run(p diary.IPage) {
+func RunBefore(p diary.IPage) {
 	if value, exist := args["env"]; exist && value != nil && value != "" {
 		Env = fmt.Sprint(value)
 	} else {

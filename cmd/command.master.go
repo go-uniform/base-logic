@@ -11,7 +11,7 @@ func init() {
 	var email string
 	var mobile string
 
-	masterCmd := Command("master", func(cmd *cobra.Command, args []string) {
+	masterCmd := command("master", func(cmd *cobra.Command, args []string) {
 		service.InitializeDiary(test, level, rate)
 		service.Command("master", natsUri, compileNatsOptions(), map[string]string{})
 	}, "Create a master admin user record if one does not already exist")

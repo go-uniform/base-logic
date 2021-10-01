@@ -1,12 +1,13 @@
-package service
+package actions
 
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"service/service/_base"
 )
 
 func init() {
-	subscribe(local(system("health")), health)
+	_base.Subscribe(_base.TargetLocal(_base.TargetSystem("health")), health)
 }
 
 func health(r uniform.IRequest, p diary.IPage) {

@@ -1,12 +1,13 @@
-package service
+package hooks
 
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"service/service/_base"
 )
 
 func init() {
-	subscribe(event("mongo", "updated"), eventMongoUpdated)
+	_base.Subscribe(_base.TargetEvent("mongo", "updated"), eventMongoUpdated)
 }
 
 func eventMongoUpdated(r uniform.IRequest, p diary.IPage) {

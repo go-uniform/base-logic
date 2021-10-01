@@ -1,15 +1,17 @@
-package service
+package hooks
 
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
 	"net/url"
+	"service/service"
+	"service/service/_base"
 	"strings"
 	"time"
 )
 
 func init() {
-	subscribe(event("auth", "jwt"), eventAuthJwt)
+	_base.Subscribe(_base.TargetEvent("auth", "jwt"), eventAuthJwt)
 }
 
 func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
@@ -20,7 +22,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 	inverted := false
 	tags := make([]string, 0)
 	links := make(map[string][]string)
-	meta := M{}
+	meta := service.M{}
 
 	db := r.Conn().Mongo(p, "")
 
@@ -32,16 +34,16 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		})
 		uniform.Alert(401, "Incorrect login details")
 	case "administrator":
-		var administrator Administrator
-		db.Read(r.Remainder(), Database, CollectionAdministrators, request.Id, &administrator, TagsAdministrator)
+		var administrator service.Administrator
+		db.Read(r.Remainder(), _base.Database, "administrators", request.Id, &administrator, service.TagsAdministrator)
 		links["administrators"] = []string{administrator.Id.Hex()}
 		inverted = administrator.Inverted
 
 		allowTags := make([]string, 0)
 		denyTags := make([]string, 0)
 		if administrator.Role != nil {
-			var role AdministratorRole
-			db.Read(r.Remainder(), Database, CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, TagsAdministratorRole)
+			var role service.AdministratorRole
+			db.Read(r.Remainder(), _base.Database, service.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, service.TagsAdministratorRole)
 			if role.AllowTags != nil {
 				allowTags = append(allowTags, role.AllowTags...)
 			}
@@ -51,21 +53,21 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		}
 
 		if inverted {
-			tags = filter(denyTags, allowTags)
-			tags = filter(tags, administrator.AllowTags)
+			tags = service.filter(denyTags, allowTags)
+			tags = service.filter(tags, administrator.AllowTags)
 			if administrator.DenyTags != nil {
 				tags = append(tags, administrator.DenyTags...)
 			}
 		} else {
-			tags = filter(allowTags, denyTags)
-			tags = filter(tags, administrator.DenyTags)
+			tags = service.filter(allowTags, denyTags)
+			tags = service.filter(tags, administrator.DenyTags)
 			if administrator.AllowTags != nil {
 				tags = append(tags, administrator.AllowTags...)
 			}
 		}
 
-		response.TwoFactor = !contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, Env, false)
-		db.Update(r.Remainder(), Database, CollectionAdministrators, administrator.Id.Hex(), uniform.M{
+		response.TwoFactor = !contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, service.Env, false)
+		db.Update(r.Remainder(), _base.Database, "administrators", administrator.Id.Hex(), uniform.M{
 			"lastLoginAt": time.Now(),
 			"counter": 0,
 		}, nil, nil)
@@ -73,15 +75,15 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		break
 	}
 
-	domain, err := url.Parse(BaseApiUrl)
+	domain, err := url.Parse(service.BaseApiUrl)
 	if err != nil {
 		panic(err)
 	}
 	response.Audience = domain.Host
-	response.Issuer = AppProject
+	response.Issuer = service.AppProject
 	response.Inverted = inverted
 	response.Tags = tags
-	response.ExpiresAt = time.Now().Add(JwtExpiryTime)
+	response.ExpiresAt = time.Now().Add(service.JwtExpiryTime)
 	response.Links = links
 	response.Meta = meta
 

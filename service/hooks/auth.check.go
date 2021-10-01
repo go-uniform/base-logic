@@ -1,13 +1,14 @@
-package service
+package hooks
 
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"service/service/_base"
 	"strings"
 )
 
 func init() {
-	subscribe(event("auth", "check"), eventAuthCheck)
+	_base.Subscribe(_base.TargetEvent("auth", "check"), eventAuthCheck)
 }
 
 func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
@@ -26,7 +27,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.FindOne(r.Remainder(), Database, CollectionAdministrators, "", 0, uniform.M{
+			db.FindOne(r.Remainder(), _base.Database, "administrators", "", 0, uniform.M{
 				"identifier": request.Identifier,
 			}, &response, nil)
 			break

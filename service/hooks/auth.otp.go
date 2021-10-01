@@ -6,6 +6,7 @@ import (
 	"github.com/go-uniform/uniform"
 	"service/service"
 	"service/service/_base"
+	"service/service/entities"
 	"strings"
 )
 
@@ -50,7 +51,7 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		})
 		uniform.Alert(401, "Incorrect login details")
 	case "administrator":
-		db.Read(r.Remainder(), _base.Database, "administrators", request.Id, &contact, service.TagsAdministrator)
+		db.Read(r.Remainder(), _base.Database, entities.CollectionAdministrators, request.Id, &contact, nil)
 		break
 	}
 

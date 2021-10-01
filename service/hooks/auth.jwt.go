@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"service/service"
 	"service/service/_base"
+	"service/service/entities"
 	"strings"
 	"time"
 )
@@ -22,7 +23,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 	inverted := false
 	tags := make([]string, 0)
 	links := make(map[string][]string)
-	meta := service.M{}
+	meta := uniform.M{}
 
 	db := r.Conn().Mongo(p, "")
 
@@ -33,17 +34,18 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 			"type": request.Type,
 		})
 		uniform.Alert(401, "Incorrect login details")
-	case "administrator":
-		var administrator service.Administrator
-		db.Read(r.Remainder(), _base.Database, "administrators", request.Id, &administrator, service.TagsAdministrator)
+	case entities.CollectionAdministrators:
+		var administrator entities.Administrator
+		db.Read(r.Remainder(), _base.Database, entities.CollectionAdministrators, request.Id, &administrator, nil)
+
 		links["administrators"] = []string{administrator.Id.Hex()}
 		inverted = administrator.Inverted
 
 		allowTags := make([]string, 0)
 		denyTags := make([]string, 0)
 		if administrator.Role != nil {
-			var role service.AdministratorRole
-			db.Read(r.Remainder(), _base.Database, service.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, service.TagsAdministratorRole)
+			var role entities.AdministratorRole
+			db.Read(r.Remainder(), _base.Database, entities.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, nil)
 			if role.AllowTags != nil {
 				allowTags = append(allowTags, role.AllowTags...)
 			}
@@ -66,8 +68,8 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 			}
 		}
 
-		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, service.Env, false)
-		db.Update(r.Remainder(), _base.Database, "administrators", administrator.Id.Hex(), uniform.M{
+		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, entities.Env, false)
+		db.Update(r.Remainder(), _base.Database, entities.CollectionAdministrators, administrator.Id.Hex(), uniform.M{
 			"lastLoginAt": time.Now(),
 			"counter": 0,
 		}, nil, nil)

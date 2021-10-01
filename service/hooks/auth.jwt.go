@@ -53,20 +53,20 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		}
 
 		if inverted {
-			tags = service.filter(denyTags, allowTags)
-			tags = service.filter(tags, administrator.AllowTags)
+			tags = uniform.Filter(denyTags, allowTags)
+			tags = uniform.Filter(tags, administrator.AllowTags)
 			if administrator.DenyTags != nil {
 				tags = append(tags, administrator.DenyTags...)
 			}
 		} else {
-			tags = service.filter(allowTags, denyTags)
-			tags = service.filter(tags, administrator.DenyTags)
+			tags = uniform.Filter(allowTags, denyTags)
+			tags = uniform.Filter(tags, administrator.DenyTags)
 			if administrator.AllowTags != nil {
 				tags = append(tags, administrator.AllowTags...)
 			}
 		}
 
-		response.TwoFactor = !contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, service.Env, false)
+		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, service.Env, false)
 		db.Update(r.Remainder(), _base.Database, "administrators", administrator.Id.Hex(), uniform.M{
 			"lastLoginAt": time.Now(),
 			"counter": 0,

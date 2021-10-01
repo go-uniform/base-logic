@@ -7,9 +7,9 @@ import (
 )
 
 func init() {
-	_base.Subscribe(_base.TargetEvent("mongo", "inserted"), eventMongoInserted)
+	_base.Subscribe(_base.TargetEvent("entity", "inserted"), entityInserted)
 }
 
-func eventMongoInserted(r uniform.IRequest, p diary.IPage) {
+func entityInserted(r uniform.IRequest, p diary.IPage) {
 	// todo: react based on which database and collection has been inserted
 }

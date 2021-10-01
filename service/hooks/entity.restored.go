@@ -7,9 +7,9 @@ import (
 )
 
 func init() {
-	_base.Subscribe(_base.TargetEvent("mongo", "restored"), eventMongoRestored)
+	_base.Subscribe(_base.TargetEvent("entity", "restored"), entityRestored)
 }
 
-func eventMongoRestored(r uniform.IRequest, p diary.IPage) {
+func entityRestored(r uniform.IRequest, p diary.IPage) {
 	// todo: react based on which database and collection has been restored
 }

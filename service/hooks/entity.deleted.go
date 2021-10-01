@@ -7,9 +7,9 @@ import (
 )
 
 func init() {
-	_base.Subscribe(_base.TargetEvent("mongo", "deleted"), eventMongoDeleted)
+	_base.Subscribe(_base.TargetEvent("entity", "deleted"), entityDeleted)
 }
 
-func eventMongoDeleted(r uniform.IRequest, p diary.IPage) {
+func entityDeleted(r uniform.IRequest, p diary.IPage) {
 	// todo: react based on which database and collection has been deleted
 }

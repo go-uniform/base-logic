@@ -12,7 +12,6 @@ func init() {
 	var limit int
 	var test bool
 	var env string
-	// todo: add custom flag variables here
 
 	var runCmd = &cobra.Command{
 		Use:   "run",
@@ -21,7 +20,7 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			service.InitializeDiary(test, level, rate)
 			service.Execute(limit, test, _base.NatsUri, _base.CompileNatsOptions(), service.M{
-				// todo: link custom flags to arg values here, example: "custom": custom,
+				"env": env,
 			})
 		},
 	}
@@ -32,7 +31,6 @@ func init() {
 	runCmd.Flags().IntVarP(&limit, "limit", "x", 1000, "The messages per second that each topic worker will be limited to [set to 0 or less for maximum throughput]")
 	runCmd.Flags().BoolVar(&test, "test", false, "A flag indicating if service should enter into test mode")
 	runCmd.Flags().StringVarP(&env, "env", "e", "", "The environment ['prod', 'demo', 'staging', 'qa', 'dev', 'local'] that service is running in")
-	// todo: add custom CLI flags here
 
 	if err := runCmd.MarkFlagRequired("env"); err != nil {
 		panic(err)

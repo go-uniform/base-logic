@@ -77,6 +77,8 @@ github.com/go-diary/diary v0.0.0-20210101215357-b1f47bcad4b4 h1:b0s+1Ug2ZuPQurUf
 github.com/go-diary/diary v0.0.0-20210101215357-b1f47bcad4b4/go.mod h1:EU6zGM4QDHXthfEbIrMTqcERTAdPgA4JS+y3lYYEPI8=
 github.com/go-diary/diary v1.0.0 h1:yOl56bmyefO4/2T6RzzvU3d4tCA1e5WYTZc+Aw1QieY=
 github.com/go-diary/diary v1.0.0/go.mod h1:EU6zGM4QDHXthfEbIrMTqcERTAdPgA4JS+y3lYYEPI8=
+github.com/go-diary/diary v1.0.1 h1:pg30/6iUta0izx9Cj0RVoZDPjYAv096SXUVlEaDwZaA=
+github.com/go-diary/diary v1.0.1/go.mod h1:EU6zGM4QDHXthfEbIrMTqcERTAdPgA4JS+y3lYYEPI8=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=

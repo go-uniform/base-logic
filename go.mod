@@ -3,7 +3,7 @@ module service
 go 1.15
 
 require (
-	github.com/go-diary/diary v1.0.0
+	github.com/go-diary/diary v1.0.1
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/go-uniform/uniform v0.0.0-20211001174043-897c8f2ee1d0
 	github.com/golang/snappy v0.0.4 // indirect

@@ -1,4 +1,6 @@
-package service
+package info
+
+import "github.com/go-uniform/uniform"
 
 /* Details
 Your hardcoded global service instance details for runtime
@@ -15,3 +17,5 @@ const (
 	Database = AppProject
 	JwtExpiryTime = time.Hour * 24
 )
+
+var Args uniform.M

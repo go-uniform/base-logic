@@ -5,9 +5,10 @@ import (
 	"github.com/go-diary/diary"
 	"strings"
 	"service/service/info"
+	"sync"
 )
 
-func RunBefore(p diary.IPage) {
+func RunBefore(shutdown chan bool, group *sync.WaitGroup, p diary.IPage) {
 	if value, exist := info.Args["env"]; exist && value != nil && value != "" {
 		info.Env = fmt.Sprint(value)
 	} else {

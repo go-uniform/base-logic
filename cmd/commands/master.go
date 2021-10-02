@@ -3,7 +3,7 @@ package commands
 import (
 	"github.com/spf13/cobra"
 	"service/cmd/_base"
-	service "service/service/_base"
+	"service/service"
 	"time"
 )
 
@@ -23,7 +23,7 @@ func init() {
 	}, "Create a master admin user record if one does not already exist")
 
 	cmd.Flags().StringVarP(&firstName, "firstName", "", "", "The master account's contact person's first name")
-	cmd.Flags().StringVarP(&lastName, "lastLame", "", "", "The master account's contact person's last name")
+	cmd.Flags().StringVarP(&lastName, "lastName", "", "", "The master account's contact person's last name")
 	cmd.Flags().StringVarP(&email, "email", "", "", "The master account's contact person email")
 	cmd.Flags().StringVarP(&mobile, "mobile", "", "", "The master account's contact person mobile")
 

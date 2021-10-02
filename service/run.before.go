@@ -7,23 +7,17 @@ import (
 	"service/service/info"
 )
 
-var Env string
-var BaseAdministratorPortalUrl = fmt.Sprintf("https://admin.%s.co.za", AppProject)
-var BaseApiUrl = fmt.Sprintf("https://api.%s.co.za", AppProject)
-var FromEmailAddress = fmt.Sprintf("noreply@%s.co.za", AppProject)
-var FromEmailName = strings.ToTitle(AppProject)
-
 func RunBefore(p diary.IPage) {
-	if value, exist := args["env"]; exist && value != nil && value != "" {
-		Env = fmt.Sprint(value)
+	if value, exist := info.Args["env"]; exist && value != nil && value != "" {
+		info.Env = fmt.Sprint(value)
 	} else {
 		panic("env was not set")
 	}
 
 	// setup configurations based on running environment
-	switch strings.ToLower(Env) {
+	switch strings.ToLower(info.Env) {
 	default:
-		panic(fmt.Sprintf("unknown environment `%s` given", Env))
+		panic(fmt.Sprintf("unknown environment `%s` given", info.Env))
 	case "prod":
 		// defaults are already set to run on local environment
 		break
@@ -41,22 +35,4 @@ func RunBefore(p diary.IPage) {
 	case "local":
 		break
 	}
-}
-
-var EnvPrefix = func() string {
-	switch strings.ToLower(Env) {
-	case "demo":
-		return "[DEMO] "
-	case "staging":
-		return "[STAGING] "
-	case "qa":
-		return "[QA] "
-	case "dev":
-		return "[DEV] "
-	case "test":
-		return "[TEST] "
-	case "local":
-		return "[LOCAL] "
-	}
-	return ""
 }

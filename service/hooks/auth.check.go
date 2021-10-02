@@ -4,6 +4,7 @@ import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
 	"service/service/_base"
+	"service/service/info"
 	"strings"
 )
 
@@ -27,7 +28,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.FindOne(r.Remainder(), _base.Database, "administrators", "", 0, uniform.M{
+			db.FindOne(r.Remainder(), info.Database, "administrators", "", 0, uniform.M{
 				"identifier": request.Identifier,
 			}, &response, nil)
 			break

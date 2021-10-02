@@ -5,6 +5,7 @@ import (
 	"github.com/go-uniform/uniform"
 	"service/service/_base"
 	"service/service/entities"
+	"service/service/info"
 	"time"
 )
 
@@ -22,11 +23,11 @@ func master(r uniform.IRequest, p diary.IPage) {
 	r.Read(&request)
 
 	db := r.Conn().Mongo(p, "")
-	if db.Count(time.Second * 5, _base.AppService, entities.CollectionAdministrators, uniform.M{}) > 0 {
+	if db.Count(time.Second * 5, info.AppService, entities.CollectionAdministrators, uniform.M{}) > 0 {
 		panic("The collection already contains records so a master record can't be created at this point")
 	}
 
-	db.Insert(time.Second * 5, _base.AppService, "administrators", entities.Administrator{
+	db.Insert(time.Second * 5, info.AppService, "administrators", entities.Administrator{
 		FirstName: request.FirstName,
 		LastName: request.LastName,
 		Email: request.Email,

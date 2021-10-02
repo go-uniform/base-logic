@@ -1,6 +1,10 @@
 package info
 
-import "github.com/go-uniform/uniform"
+import (
+	"fmt"
+	"github.com/go-uniform/uniform"
+	"strings"
+)
 
 /* Details
 Your hardcoded global service instance details for runtime
@@ -19,3 +23,26 @@ const (
 )
 
 var Args uniform.M
+var Env string
+var BaseAdministratorPortalUrl = fmt.Sprintf("https://admin.%s.co.za", AppProject)
+var BaseApiUrl = fmt.Sprintf("https://api.%s.co.za", AppProject)
+var FromEmailAddress = fmt.Sprintf("noreply@%s.co.za", AppProject)
+var FromEmailName = strings.ToTitle(AppProject)
+
+var EnvPrefix = func() string {
+	switch strings.ToLower(Env) {
+	case "demo":
+		return "[DEMO] "
+	case "staging":
+		return "[STAGING] "
+	case "qa":
+		return "[QA] "
+	case "dev":
+		return "[DEV] "
+	case "test":
+		return "[TEST] "
+	case "local":
+		return "[LOCAL] "
+	}
+	return ""
+}

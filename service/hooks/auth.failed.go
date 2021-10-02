@@ -4,6 +4,7 @@ import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
 	"service/service/_base"
+	"service/service/info"
 	"strings"
 	"time"
 )
@@ -28,14 +29,14 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.Read(r.Remainder(), _base.Database, "administrators", request.Id, &response, nil)
+			db.Read(r.Remainder(), info.Database, "administrators", request.Id, &response, nil)
 			if response.LockedAt == nil && response.BlockedAt == nil {
 				if response.Counter >= 2 {
-					db.Update(r.Remainder(), _base.Database, "administrators", request.Id, uniform.M{
+					db.Update(r.Remainder(), info.Database, "administrators", request.Id, uniform.M{
 						"lockedAt": time.Now(),
 					}, nil, nil)
 				} else {
-					db.Inc(r.Remainder(), _base.Database, "administrators", request.Id, "counter", 1, nil, nil)
+					db.Inc(r.Remainder(), info.Database, "administrators", request.Id, "counter", 1, nil, nil)
 				}
 			}
 			break

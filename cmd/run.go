@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/go-uniform/uniform"
 	"github.com/spf13/cobra"
 	"service/cmd/_base"
 	"service/service"
@@ -19,7 +20,7 @@ func init() {
 		Short: "Run " + info.AppName + " service",
 		Long:  "Run " + info.AppName + " service",
 		Run: func(cmd *cobra.Command, args []string) {
-			service.Execute(level, rate, limit, test, _base.NatsUri, _base.CompileNatsOptions(), service.M{
+			service.Execute(level, rate, limit, test, _base.NatsUri, _base.CompileNatsOptions(), uniform.M{
 				"env": env,
 			})
 		},

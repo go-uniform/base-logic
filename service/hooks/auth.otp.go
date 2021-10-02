@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"service/service"
 	"service/service/_base"
 	"service/service/entities"
+	"service/service/info"
 	"strings"
 )
 
@@ -51,17 +51,17 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		})
 		uniform.Alert(401, "Incorrect login details")
 	case "administrator":
-		db.Read(r.Remainder(), _base.Database, entities.CollectionAdministrators, request.Id, &contact, nil)
+		db.Read(r.Remainder(), info.Database, entities.CollectionAdministrators, request.Id, &contact, nil)
 		break
 	}
 
 	// handle the login otp scenario
 	if !request.Reset {
-		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.login.code", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), info.MustAsset, "", "auth.otp.login.code", uniform.M{
 			"Name":    contact.Name,
-			"Project": strings.ToTitle(service.AppProject),
+			"Project": strings.ToTitle(info.AppProject),
 			"Code":    *request.Code,
-			"Env":     service.EnvPrefix(),
+			"Env":     info.EnvPrefix(),
 		}, contact.Mobile)
 
 		if err := r.Reply(uniform.Request{
@@ -80,34 +80,34 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		panic(fmt.Sprintf("unsupported method `%s` given", request.Method))
 	case "code":
 		if contact.Email != "" {
-			r.Conn().SendEmailTemplate(p, r.Remainder(), MustAsset, "", "from", "fromName", "auth.otp.reset.code", uniform.M{
+			r.Conn().SendEmailTemplate(p, r.Remainder(), info.MustAsset, "", "from", "fromName", "auth.otp.reset.code", uniform.M{
 				"Name":    contact.Name,
-				"Project": strings.ToTitle(service.AppProject),
+				"Project": strings.ToTitle(info.AppProject),
 				"Code":    *request.Code,
-				"Env":     service.EnvPrefix(),
+				"Env":     info.EnvPrefix(),
 			}, contact.Email)
 		}
-		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.reset.code", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), info.MustAsset, "", "auth.otp.reset.code", uniform.M{
 			"Name":    contact.Name,
-			"Project": strings.ToTitle(service.AppProject),
+			"Project": strings.ToTitle(info.AppProject),
 			"Code":    *request.Code,
-			"Env":     service.EnvPrefix(),
+			"Env":     info.EnvPrefix(),
 		}, contact.Mobile)
 		break
 	case "link":
 		if contact.Email != "" {
-			r.Conn().SendEmailTemplate(p, r.Remainder(), MustAsset, "", "from", "fromName", "auth.otp.reset.link", uniform.M{
+			r.Conn().SendEmailTemplate(p, r.Remainder(), info.MustAsset, "", "from", "fromName", "auth.otp.reset.link", uniform.M{
 				"Name":    contact.Name,
-				"Project": strings.ToTitle(service.AppProject),
-				"Link":    fmt.Sprintf("%s/#/password-reset-complete?token=%s", service.BaseAdministratorPortalUrl, *request.Token),
-				"Env":     service.EnvPrefix(),
+				"Project": strings.ToTitle(info.AppProject),
+				"Link":    fmt.Sprintf("%s/#/password-reset-complete?token=%s", info.BaseAdministratorPortalUrl, *request.Token),
+				"Env":     info.EnvPrefix(),
 			}, contact.Email)
 		}
-		r.Conn().SendSmsTemplate(p, r.Remainder(), MustAsset, "", "auth.otp.reset.link", uniform.M{
+		r.Conn().SendSmsTemplate(p, r.Remainder(), info.MustAsset, "", "auth.otp.reset.link", uniform.M{
 			"Name":    contact.Name,
-			"Project": strings.ToTitle(service.AppProject),
-			"Link":    fmt.Sprintf("%s/#/password-reset-complete?token=%s", service.BaseAdministratorPortalUrl, *request.Token),
-			"Env":     service.EnvPrefix(),
+			"Project": strings.ToTitle(info.AppProject),
+			"Link":    fmt.Sprintf("%s/#/password-reset-complete?token=%s", info.BaseAdministratorPortalUrl, *request.Token),
+			"Env":     info.EnvPrefix(),
 		}, contact.Mobile)
 		break
 	}

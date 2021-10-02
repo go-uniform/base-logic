@@ -4,9 +4,9 @@ import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
 	"net/url"
-	"service/service"
 	"service/service/_base"
 	"service/service/entities"
+	"service/service/info"
 	"strings"
 	"time"
 )
@@ -36,7 +36,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		uniform.Alert(401, "Incorrect login details")
 	case entities.CollectionAdministrators:
 		var administrator entities.Administrator
-		db.Read(r.Remainder(), _base.Database, entities.CollectionAdministrators, request.Id, &administrator, nil)
+		db.Read(r.Remainder(), info.Database, entities.CollectionAdministrators, request.Id, &administrator, nil)
 
 		links["administrators"] = []string{administrator.Id.Hex()}
 		inverted = administrator.Inverted
@@ -45,7 +45,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		denyTags := make([]string, 0)
 		if administrator.Role != nil {
 			var role entities.AdministratorRole
-			db.Read(r.Remainder(), _base.Database, entities.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, nil)
+			db.Read(r.Remainder(), info.Database, entities.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, nil)
 			if role.AllowTags != nil {
 				allowTags = append(allowTags, role.AllowTags...)
 			}
@@ -68,8 +68,8 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 			}
 		}
 
-		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, entities.Env, false)
-		db.Update(r.Remainder(), _base.Database, entities.CollectionAdministrators, administrator.Id.Hex(), uniform.M{
+		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, info.Env, false)
+		db.Update(r.Remainder(), info.Database, entities.CollectionAdministrators, administrator.Id.Hex(), uniform.M{
 			"lastLoginAt": time.Now(),
 			"counter": 0,
 		}, nil, nil)
@@ -77,15 +77,15 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		break
 	}
 
-	domain, err := url.Parse(service.BaseApiUrl)
+	domain, err := url.Parse(info.BaseApiUrl)
 	if err != nil {
 		panic(err)
 	}
 	response.Audience = domain.Host
-	response.Issuer = service.AppProject
+	response.Issuer = info.AppProject
 	response.Inverted = inverted
 	response.Tags = tags
-	response.ExpiresAt = time.Now().Add(service.JwtExpiryTime)
+	response.ExpiresAt = time.Now().Add(info.JwtExpiryTime)
 	response.Links = links
 	response.Meta = meta
 

@@ -3,7 +3,7 @@ package commands
 import (
 	"github.com/spf13/cobra"
 	"service/cmd/_base"
-	service "service/service/_base"
+	"service/service"
 	"time"
 )
 

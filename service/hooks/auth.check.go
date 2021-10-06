@@ -3,6 +3,8 @@ package hooks
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"github.com/go-uniform/uniform/nosql"
+	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/info"
 	"strings"
@@ -17,9 +19,9 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthCheckResponse
 	r.Read(&request)
 
-	db := r.Conn().Mongo(p, "")
+	db := nosql.Request(r.Conn(), p, "")
 	exists := false
-	db.CatchNoDocumentsErr(func(p diary.IPage) {
+	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {
 		default:
 			p.Warning("check", "an attempt to auth an unknown type", diary.M{
@@ -28,9 +30,9 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.FindOne(r.Remainder(), info.Database, "administrators", "", 0, uniform.M{
-				"identifier": request.Identifier,
-			}, &response, nil)
+			db.FindOne(r.Remainder(), info.Database, "administrators", "", 0, bson.D{
+				{"_id", request.Identifier },
+			}, &response)
 			break
 		}
 		exists = true

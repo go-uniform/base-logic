@@ -3,6 +3,8 @@ package hooks
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"github.com/go-uniform/uniform/nosql"
+	"go.mongodb.org/mongo-driver/bson"
 	"net/url"
 	"service/service/_base"
 	"service/service/entities"
@@ -25,7 +27,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 	links := make(map[string][]string)
 	meta := uniform.M{}
 
-	db := r.Conn().Mongo(p, "")
+	db := nosql.Request(r.Conn(), p, "")
 
 	switch strings.ToLower(request.Type) {
 	default:
@@ -36,7 +38,9 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		uniform.Alert(401, "Incorrect login details")
 	case entities.CollectionAdministrators:
 		var administrator entities.Administrator
-		db.Read(r.Remainder(), info.Database, entities.CollectionAdministrators, request.Id, &administrator, nil)
+		db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
+			{"_id", request.Id},
+		}, &administrator)
 
 		links["administrators"] = []string{administrator.Id.Hex()}
 		inverted = administrator.Inverted
@@ -45,7 +49,9 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		denyTags := make([]string, 0)
 		if administrator.Role != nil {
 			var role entities.AdministratorRole
-			db.Read(r.Remainder(), info.Database, entities.CollectionAdministratorRoles, administrator.Role.Id.Hex(), &role, nil)
+			db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministratorRoles, "", 0, bson.D{
+				{"_id", administrator.Role.Id},
+			}, &role)
 			if role.AllowTags != nil {
 				allowTags = append(allowTags, role.AllowTags...)
 			}
@@ -69,10 +75,10 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		}
 
 		response.TwoFactor = !uniform.Contains([]string{"staging", "qa", "development", "dev", "localhost", "local"}, info.Env, false)
-		db.Update(r.Remainder(), info.Database, entities.CollectionAdministrators, administrator.Id.Hex(), uniform.M{
-			"lastLoginAt": time.Now(),
-			"counter": 0,
-		}, nil, nil)
+		now := time.Now()
+		administrator.LastLoginAt = &now
+		administrator.LoginAttemptCounter = 0
+		db.UpdateOne(r.Remainder(), info.Database, entities.CollectionAdministrators, administrator.Id, administrator, nil)
 
 		break
 	}

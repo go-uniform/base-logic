@@ -9,13 +9,13 @@ const CollectionAdministratorRoles = "administratorRoles"
 
 type AdministratorRole struct {
 	// System
-	Id primitive.ObjectID `bson:"id"`
+	Id primitive.ObjectID `bson:"_id"`
 	CreatedAt time.Time `bson:"createdAt"`
 	ModifiedAt time.Time `bson:"modifiedAt"`
 	DeletedAt *time.Time `bson:"deletedAt"`
 
 	// Fields
-	Name string `json:"name"`
-	AllowTags []string `json:"allowTags"`
-	DenyTags []string `json:"denyTags"`
+	Name string `bson:"name"`
+	AllowTags []string `bson:"allowTags"`
+	DenyTags []string `bson:"denyTags"`
 }

@@ -3,6 +3,8 @@ package hooks
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"github.com/go-uniform/uniform/nosql"
+	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/info"
 	"strings"
@@ -18,9 +20,9 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthFailedResponse
 	r.Read(&request)
 
-	db := r.Conn().Mongo(p, "")
+	db := nosql.Request(r.Conn(), p, "")
 	exists := false
-	db.CatchNoDocumentsErr(func(p diary.IPage) {
+	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {
 		default:
 			p.Warning("check", "an attempt to auth an unknown type", diary.M{
@@ -29,15 +31,17 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.Read(r.Remainder(), info.Database, "administrators", request.Id, &response, nil)
+			db.FindOne(r.Remainder(), info.Database, "administrators", "", 0, bson.D{
+				{"_id", request.Id},
+			}, &response)
 			if response.LockedAt == nil && response.BlockedAt == nil {
 				if response.Counter >= 2 {
-					db.Update(r.Remainder(), info.Database, "administrators", request.Id, uniform.M{
-						"lockedAt": time.Now(),
-					}, nil, nil)
+					now := time.Now()
+					response.LockedAt = &now
 				} else {
-					db.Inc(r.Remainder(), info.Database, "administrators", request.Id, "counter", 1, nil, nil)
+					response.Counter++
 				}
+				db.UpdateOne(r.Remainder(), info.Database, "administrators", request.Id, response, nil)
 			}
 			break
 		}

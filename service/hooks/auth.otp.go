@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"github.com/go-uniform/uniform/nosql"
+	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/entities"
 	"service/service/info"
@@ -19,7 +21,7 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthOtpResponse
 	r.Read(&request)
 
-	db := r.Conn().Mongo(p, "")
+	db := nosql.Request(r.Conn(), p, "")
 
 	id := request.Id
 	if id == "" {
@@ -51,7 +53,9 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		})
 		uniform.Alert(401, "Incorrect login details")
 	case "administrator":
-		db.Read(r.Remainder(), info.Database, entities.CollectionAdministrators, request.Id, &contact, nil)
+		db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
+			{"_id", request.Identifier },
+		}, &contact)
 		break
 	}
 

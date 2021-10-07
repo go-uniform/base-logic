@@ -1,10 +1,12 @@
-package hooks
+package entity
 
 import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
+	"service/service/entities"
 	"service/service/info"
 )
 
@@ -17,7 +19,12 @@ func init() {
 			// send request straight to response
 			r.Read(&response)
 
-			// todo: decrypt protected fields
+		case entities.CollectionAdministrators:
+			var entity bson.M
+			r.Read(&entity)
+
+			response = entity
+			break
 
 		}
 

@@ -1,10 +1,12 @@
-package hooks
+package entity
 
 import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
+	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
+	"service/service/entities"
 	"service/service/info"
 )
 
@@ -16,8 +18,19 @@ func init() {
 		default:
 			// send request straight to response
 			r.Read(&response)
+			break
 
-		// todo: add validation rules
+		case entities.CollectionAdministrators:
+			var entity bson.M
+			r.Read(&entity)
+
+			// set the identifier
+			entity["identifier"] = []string{
+				uniform.Hash(entity["email"], info.Salt),
+			}
+
+			response = entity
+			break
 
 		}
 

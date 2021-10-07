@@ -1,4 +1,4 @@
-package hooks
+package auth
 
 import (
 	"github.com/go-diary/diary"
@@ -11,13 +11,26 @@ import (
 	"time"
 )
 
+type FailedRequest struct {
+	Type string `bson:"type"`
+	Id string `bson:"id"`
+}
+
+type FailedResponse struct {
+	Id string `bson:"id"`
+	Password *string `bson:"password"`
+	Counter int64 `bson:"counter"`
+	BlockedAt *time.Time `bson:"blockedAt"`
+	LockedAt *time.Time `bson:"lockedAt"`
+}
+
 func init() {
-	_base.Subscribe(_base.TargetEvent("auth", "failed"), eventAuthFailed)
+	_base.Subscribe(_base.TargetLocal(_base.TargetEvent("auth", "failed")), eventAuthFailed)
 }
 
 func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
-	var request uniform.AuthFailedRequest
-	var response uniform.AuthFailedResponse
+	var request FailedRequest
+	var response FailedResponse
 	r.Read(&request)
 
 	db := nosql.Request(r.Conn(), p, "", true)

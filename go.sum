@@ -95,6 +95,12 @@ github.com/go-uniform/uniform v0.0.0-20211001174043-897c8f2ee1d0 h1:l9WuJ+QTjM1c
 github.com/go-uniform/uniform v0.0.0-20211001174043-897c8f2ee1d0/go.mod h1:6z51aaF30ZpbDXGdazLhO89nZtQw6LdVW+5e61C6NcY=
 github.com/go-uniform/uniform v0.0.0-20211006152323-0ca2e71383ee h1:cXfpkPuZAMQszS09os8jj/7dLJfXrFo3vu0aoaAv8cw=
 github.com/go-uniform/uniform v0.0.0-20211006152323-0ca2e71383ee/go.mod h1:6z51aaF30ZpbDXGdazLhO89nZtQw6LdVW+5e61C6NcY=
+github.com/go-uniform/uniform v0.0.0-20211007115502-348e416822de h1:xtnAmnGPQpEFr6bXpJAICu+3foUGdxP/lPa5Uu4YBk4=
+github.com/go-uniform/uniform v0.0.0-20211007115502-348e416822de/go.mod h1:6z51aaF30ZpbDXGdazLhO89nZtQw6LdVW+5e61C6NcY=
+github.com/go-uniform/uniform v0.0.0-20211007210023-68c241eb7b68 h1:6NspI81JHgeksqsvOgi63vQMpkpDDcR9xf+tE8RjA20=
+github.com/go-uniform/uniform v0.0.0-20211007210023-68c241eb7b68/go.mod h1:6z51aaF30ZpbDXGdazLhO89nZtQw6LdVW+5e61C6NcY=
+github.com/go-uniform/uniform v0.0.0-20211007213035-103408234575 h1:3Kid9xdz1pSUTR0SXycoSiN8Z8+9tWjT10WprAKS8OQ=
+github.com/go-uniform/uniform v0.0.0-20211007213035-103408234575/go.mod h1:6z51aaF30ZpbDXGdazLhO89nZtQw6LdVW+5e61C6NcY=
 github.com/gobuffalo/attrs v0.0.0-20190224210810-a9411de4debd/go.mod h1:4duuawTqi2wkkpB4ePgWMaai6/Kc6WEz83bhFwpHzj0=
 github.com/gobuffalo/depgen v0.0.0-20190329151759-d478694a28d3/go.mod h1:3STtPUQYuzV0gBVOY3vy6CfMm/ljR4pABfrTeHNLHUY=
 github.com/gobuffalo/depgen v0.1.0/go.mod h1:+ifsuy7fhi15RWncXQQKjWS9JPkdah5sZvtHc2RXGlg=
@@ -121,6 +127,9 @@ github.com/gobuffalo/packr/v2 v2.2.0/go.mod h1:CaAwI0GPIAv+5wKLtv8Afwl+Cm78K/I/V
 github.com/gobuffalo/syncx v0.0.0-20190224160051-33c29581e754/go.mod h1:HhnNqWY95UYwwW3uSASeV7vtgYkT2t16hJgV3AEPUpw=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
+github.com/golang-jwt/jwt v1.0.2 h1:Nj1npK0K5RnXGo1SxoOixRGAehIZ2326eXuca9gX9A4=
+github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
+github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20191227052852-215e87163ea7/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=

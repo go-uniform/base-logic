@@ -1,4 +1,4 @@
-package hooks
+package entity
 
 import (
 	"github.com/go-diary/diary"

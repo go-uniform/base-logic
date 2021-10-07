@@ -1,4 +1,4 @@
-package hooks
+package auth
 
 import (
 	"github.com/go-diary/diary"

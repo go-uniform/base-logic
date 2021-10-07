@@ -1,4 +1,4 @@
-package hooks
+package entity
 
 import (
 	"fmt"
@@ -9,15 +9,12 @@ import (
 )
 
 func init() {
-	_base.Subscribe(_base.TargetEvent("entity", fmt.Sprintf("%s.encrypt", info.Database)), func(r uniform.IRequest, p diary.IPage) {
+	_base.Subscribe(_base.TargetEvent("entity", fmt.Sprintf("%s.constraints", info.Database)), func(r uniform.IRequest, p diary.IPage) {
 		var response interface{}
 
 		switch r.Parameters()["collection"] {
-		default:
-			// send request straight to response
-			r.Read(&response)
 
-			// todo: encrypt protected fields
+			// todo: add constaint checks
 
 		}
 

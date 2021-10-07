@@ -1,4 +1,4 @@
-package hooks
+package auth
 
 import (
 	"github.com/go-diary/diary"
@@ -6,17 +6,33 @@ import (
 	"github.com/go-uniform/uniform/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
+	"service/service/entities"
 	"service/service/info"
 	"strings"
+	"time"
 )
 
+
+type CheckRequest struct {
+	Type string `bson:"type"`
+	Identifier string `bson:"identifier"`
+	Reset bool `bson:"reset"`
+}
+
+type CheckResponse struct {
+	Id string `bson:"_id"`
+	Password *string `bson:"password"`
+	BlockedAt *time.Time `bson:"blockedAt"`
+	LockedAt *time.Time `bson:"lockedAt"`
+}
+
 func init() {
-	_base.Subscribe(_base.TargetEvent("auth", "check"), eventAuthCheck)
+	_base.Subscribe(_base.TargetLocal(_base.TargetEvent("auth", "check")), eventAuthCheck)
 }
 
 func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
-	var request uniform.AuthCheckRequest
-	var response uniform.AuthCheckResponse
+	var request CheckRequest
+	var response CheckResponse
 	r.Read(&request)
 
 	db := nosql.Request(r.Conn(), p, "", true)
@@ -30,8 +46,8 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 			})
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
-			db.FindOne(r.Remainder(), info.Database, "administrators", "", 0, bson.D{
-				{"_id", request.Identifier },
+			db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
+				{"identifier", uniform.Hash(request.Identifier, info.Salt) },
 			}, &response)
 			break
 		}
@@ -42,7 +58,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 		// keep in mind that because of this error people may use the login function to find out if another person is a member of your site
 		// so if your site has an element of confidentiality associated with it you will want to remove this error to keep member's existence confidential
 		// having this check does help user experience specifically for typos in identifier so don't remove if you don't have to
-		uniform.Alert(401, "On account matched the given identifier")
+		uniform.Alert(401, "No account matched the given identifier")
 	}
 
 	if response.BlockedAt != nil {

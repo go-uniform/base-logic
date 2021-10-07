@@ -28,6 +28,7 @@ var BaseAdministratorPortalUrl = fmt.Sprintf("https://admin.%s.co.za", AppProjec
 var BaseApiUrl = fmt.Sprintf("https://api.%s.co.za", AppProject)
 var FromEmailAddress = fmt.Sprintf("noreply@%s.co.za", AppProject)
 var FromEmailName = strings.ToTitle(AppProject)
+var Salt = `9xwY7QhIfmekHQ*@qGYT#!SU9ngVdFAU`
 
 var EnvPrefix = func() string {
 	switch strings.ToLower(Env) {

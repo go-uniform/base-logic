@@ -16,6 +16,7 @@ type Administrator struct {
 	BlockedAt *time.Time `bson:"blockedAt"`
 
 	// Fields
+	Identifier []string `bson:"identifier"`
 	FirstName string `bson:"firstName"`
 	LastName string `bson:"lastName"`
 	Email string `bson:"email"`

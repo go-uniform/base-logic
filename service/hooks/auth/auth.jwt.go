@@ -1,4 +1,4 @@
-package hooks
+package auth
 
 import (
 	"github.com/go-diary/diary"
@@ -13,13 +13,30 @@ import (
 	"time"
 )
 
+type JwtRequest struct {
+	Type string `bson:"type"`
+	Id string `bson:"id"`
+}
+
+type JwtResponse struct {
+	TwoFactor  bool `bson:"twoFactor"`
+	Issuer     string `bson:"issuer"`
+	Audience   string `bson:"audience"`
+	ExpiresAt  time.Time `bson:"expiresAt"`
+	ActivateAt *time.Time `bson:"activateAt"`
+	Inverted   bool `bson:"inverted"`
+	Tags       []string `bson:"tags"`
+	Links      map[string][]string `bson:"links"`
+	Meta       map[string]interface{} `bson:"meta"`
+}
+
 func init() {
-	_base.Subscribe(_base.TargetEvent("auth", "jwt"), eventAuthJwt)
+	_base.Subscribe(_base.TargetLocal(_base.TargetEvent("auth", "jwt")), eventAuthJwt)
 }
 
 func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
-	var request uniform.AuthJwtRequest
-	var response uniform.AuthJwtResponse
+	var request JwtRequest
+	var response JwtResponse
 	r.Read(&request)
 
 	inverted := false
@@ -36,7 +53,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 			"type": request.Type,
 		})
 		uniform.Alert(401, "Incorrect login details")
-	case entities.CollectionAdministrators:
+	case "administrator":
 		var administrator entities.Administrator
 		db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
 			{"_id", request.Id},

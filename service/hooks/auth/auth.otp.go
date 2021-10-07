@@ -1,4 +1,4 @@
-package hooks
+package auth
 
 import (
 	"fmt"
@@ -12,13 +12,28 @@ import (
 	"strings"
 )
 
+type OtpRequest struct {
+	Type string `bson:"type"`
+	Identifier string `bson:"identifier"`
+	Reset bool `bson:"reset"`
+	Method string `bson:"method"`
+	Code *string `bson:"code"`
+	Token *string `bson:"token"`
+
+	Id string `bson:"id"`
+	Meta uniform.M `bson:"meta"`
+}
+
+type OtpResponse struct {
+}
+
 func init() {
-	_base.Subscribe(_base.TargetEvent("auth", "otp"), eventAuthOtp)
+	_base.Subscribe(_base.TargetLocal(_base.TargetEvent("auth", "otp")), eventAuthOtp)
 }
 
 func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
-	var request uniform.AuthOtpRequest
-	var response uniform.AuthOtpResponse
+	var request OtpRequest
+	var response OtpResponse
 	r.Read(&request)
 
 	db := nosql.Request(r.Conn(), p, "", true)
@@ -26,13 +41,13 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 	id := request.Id
 	if id == "" {
 		r.Conn().Request(p, "", r.Remainder(), uniform.Request{
-			Model: uniform.AuthCheckRequest{
+			Model: CheckRequest{
 				Type: request.Type,
 				Identifier: request.Identifier,
 				Reset: true,
 			},
 		}, func(r uniform.IRequest, p diary.IPage) {
-			var entity uniform.AuthCheckResponse
+			var entity CheckResponse
 			r.Read(&entity)
 			id = entity.Id
 		})

@@ -20,7 +20,7 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthFailedResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "")
+	db := nosql.Request(r.Conn(), p, "", true)
 	exists := false
 	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {
@@ -41,7 +41,7 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 				} else {
 					response.Counter++
 				}
-				db.UpdateOne(r.Remainder(), info.Database, "administrators", request.Id, response, nil)
+				db.UpdateOne(r.Remainder(), info.Database, "administrators", bson.D{ {"_id", request.Id } }, response, nil)
 			}
 			break
 		}

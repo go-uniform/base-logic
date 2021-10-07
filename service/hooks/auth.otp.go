@@ -21,7 +21,7 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthOtpResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "")
+	db := nosql.Request(r.Conn(), p, "", true)
 
 	id := request.Id
 	if id == "" {

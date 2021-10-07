@@ -19,7 +19,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 	var response uniform.AuthCheckResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "")
+	db := nosql.Request(r.Conn(), p, "", true)
 	exists := false
 	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {

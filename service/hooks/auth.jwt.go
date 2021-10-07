@@ -27,7 +27,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 	links := make(map[string][]string)
 	meta := uniform.M{}
 
-	db := nosql.Request(r.Conn(), p, "")
+	db := nosql.Request(r.Conn(), p, "", true)
 
 	switch strings.ToLower(request.Type) {
 	default:
@@ -78,7 +78,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		now := time.Now()
 		administrator.LastLoginAt = &now
 		administrator.LoginAttemptCounter = 0
-		db.UpdateOne(r.Remainder(), info.Database, entities.CollectionAdministrators, administrator.Id, administrator, nil)
+		db.UpdateOne(r.Remainder(), info.Database, entities.CollectionAdministrators, bson.D{ {"_id",administrator.Id} }, administrator, nil)
 
 		break
 	}

@@ -22,7 +22,7 @@ func init() {
 		}
 		r.Read(&request)
 
-		db := nosql.Request(r.Conn(), p, "")
+		db := nosql.Request(r.Conn(), p, "", true)
 		if db.Count(time.Second * 5, info.Database, entities.CollectionAdministrators, bson.D{}) > 0 {
 			if r.CanReply() {
 				if err := r.Reply(uniform.Request{

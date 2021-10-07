@@ -19,15 +19,15 @@ func Command(cmd string, timeout time.Duration, natsUri string, natsOptions []na
 	if err != nil {
 		panic(err)
 	}
-	c, err = uniform.ConnectorNats(d, natsConn)
+	info.Conn, err = uniform.ConnectorNats(info.Diary, natsConn)
 	if err != nil {
 		panic(err)
 	}
 
-	defer c.Close()
+	defer info.Conn.Close()
 
-	d.Page(-1, traceRate, true, info.AppName, nil, "", "", nil, func(p diary.IPage) {
-		if err := c.Request(p, TargetCommand(cmd), timeout, uniform.Request{
+	info.Diary.Page(-1, info.TraceRate, true, info.AppName, nil, "", "", nil, func(p diary.IPage) {
+		if err := info.Conn.Request(p, TargetCommand(cmd), timeout, uniform.Request{
 			Model: args,
 		}, func(r uniform.IRequest, p diary.IPage) {
 			if r.HasError() {
@@ -46,5 +46,5 @@ func Command(cmd string, timeout time.Duration, natsUri string, natsOptions []na
 		}
 	})
 
-	_ = c.Drain()
+	_ = info.Conn.Drain()
 }

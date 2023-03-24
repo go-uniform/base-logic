@@ -13,7 +13,7 @@ func init() {
 	var rate int
 	var limit int
 	var test bool
-	var env string
+	// todo: add custom flag variables here
 
 	var runCmd = &cobra.Command{
 		Use:   "run",
@@ -21,16 +21,16 @@ func init() {
 		Long:  "Run " + info.AppName + " service",
 		Run: func(cmd *cobra.Command, args []string) {
 			service.Execute(level, rate, limit, test, _base.NatsUri, _base.CompileNatsOptions(), uniform.M{
-				"nats": _base.NatsUri,
-				"natsCert": _base.NatsCert,
-				"natsKey": _base.NatsKey,
+				"nats":       _base.NatsUri,
+				"natsCert":   _base.NatsCert,
+				"natsKey":    _base.NatsKey,
 				"disableTls": _base.DisableTls,
-				"lvl": level,
-				"rate": rate,
-				"limit": limit,
-				"test": test,
+				"lvl":        level,
+				"rate":       rate,
+				"limit":      limit,
+				"test":       test,
 
-				"env": env,
+				// todo: link custom flags to arg values here, example: "custom": custom,
 			})
 		},
 	}
@@ -40,11 +40,9 @@ func init() {
 	runCmd.Flags().IntVarP(&rate, "rate", "r", 1000, "The sample rate of the trace logs used for performance auditing [set to -1 to log every trace]")
 	runCmd.Flags().IntVarP(&limit, "limit", "x", 1000, "The messages per second that each topic worker will be limited to [set to 0 or less for maximum throughput]")
 	runCmd.Flags().BoolVar(&test, "test", false, "A flag indicating if service should enter into test mode")
-	runCmd.Flags().StringVarP(&env, "env", "e", "", "The environment ['prod', 'demo', 'staging', 'qa', 'dev', 'local'] that service is running in")
+	// todo: add custom CLI flags here
 
-	if err := runCmd.MarkFlagRequired("env"); err != nil {
-		panic(err)
-	}
+	// todo: add custom CLI flag validations here
 
 	_base.RootCmd.AddCommand(runCmd)
 }

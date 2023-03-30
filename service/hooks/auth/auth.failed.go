@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"github.com/go-uniform/uniform/nosql"
+	"github.com/go-uniform/uniform/common/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/info"
@@ -13,15 +13,15 @@ import (
 
 type FailedRequest struct {
 	Type string `bson:"type"`
-	Id string `bson:"id"`
+	Id   string `bson:"id"`
 }
 
 type FailedResponse struct {
-	Id string `bson:"id"`
-	Password *string `bson:"password"`
-	Counter int64 `bson:"counter"`
+	Id        string     `bson:"id"`
+	Password  *string    `bson:"password"`
+	Counter   int64      `bson:"counter"`
 	BlockedAt *time.Time `bson:"blockedAt"`
-	LockedAt *time.Time `bson:"lockedAt"`
+	LockedAt  *time.Time `bson:"lockedAt"`
 }
 
 func init() {
@@ -33,8 +33,7 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 	var response FailedResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "", true)
-	exists := false
+	db := nosql.Connector(r.Conn(), p, info.AppService)
 	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {
 		default:
@@ -54,11 +53,10 @@ func eventAuthFailed(r uniform.IRequest, p diary.IPage) {
 				} else {
 					response.Counter++
 				}
-				db.UpdateOne(r.Remainder(), info.Database, "administrators", bson.D{ {"_id", request.Id } }, response, nil)
+				db.UpdateOne(r.Remainder(), info.Database, "administrators", bson.D{{"_id", request.Id}}, response, nil)
 			}
 			break
 		}
-		exists = true
 	})
 
 	if err := r.Reply(uniform.Request{

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"github.com/go-uniform/uniform/nosql"
+	"github.com/go-uniform/uniform/common/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/entities"
@@ -13,14 +13,14 @@ import (
 )
 
 type OtpRequest struct {
-	Type string `bson:"type"`
-	Identifier string `bson:"identifier"`
-	Reset bool `bson:"reset"`
-	Method string `bson:"method"`
-	Code *string `bson:"code"`
-	Token *string `bson:"token"`
+	Type       string  `bson:"type"`
+	Identifier string  `bson:"identifier"`
+	Reset      bool    `bson:"reset"`
+	Method     string  `bson:"method"`
+	Code       *string `bson:"code"`
+	Token      *string `bson:"token"`
 
-	Id string `bson:"id"`
+	Id   string    `bson:"id"`
 	Meta uniform.M `bson:"meta"`
 }
 
@@ -36,15 +36,15 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 	var response OtpResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "", true)
+	db := nosql.Connector(r.Conn(), p, info.AppService)
 
 	id := request.Id
 	if id == "" {
 		r.Conn().Request(p, "", r.Remainder(), uniform.Request{
 			Model: CheckRequest{
-				Type: request.Type,
+				Type:       request.Type,
 				Identifier: request.Identifier,
-				Reset: true,
+				Reset:      true,
 			},
 		}, func(r uniform.IRequest, p diary.IPage) {
 			var entity CheckResponse
@@ -54,9 +54,9 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 	}
 
 	var contact struct {
-		Name       string
-		Email      string
-		Mobile     string
+		Name   string
+		Email  string
+		Mobile string
 	}
 
 	// populate contact based on auth type and id
@@ -69,7 +69,7 @@ func eventAuthOtp(r uniform.IRequest, p diary.IPage) {
 		uniform.Alert(401, "Incorrect login details")
 	case "administrator":
 		db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
-			{"_id", request.Identifier },
+			{"_id", request.Identifier},
 		}, &contact)
 		break
 	}

@@ -3,7 +3,7 @@ package commands
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"github.com/go-uniform/uniform/nosql"
+	"github.com/go-uniform/uniform/common/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/entities"
@@ -15,15 +15,15 @@ func init() {
 	_base.Subscribe(_base.TargetCommand("master"), func(r uniform.IRequest, p diary.IPage) {
 		var request struct {
 			FirstName string `json:"firstName"`
-			LastName string `json:"lastName"`
-			Email string `json:"email"`
-			Mobile string `json:"mobile"`
-			Password string `json:"password"`
+			LastName  string `json:"lastName"`
+			Email     string `json:"email"`
+			Mobile    string `json:"mobile"`
+			Password  string `json:"password"`
 		}
 		r.Read(&request)
 
-		db := nosql.Request(r.Conn(), p, "", true)
-		if db.Count(time.Second * 5, info.Database, entities.CollectionAdministrators, bson.D{}) > 0 {
+		db := nosql.Connector(r.Conn(), p, info.AppService)
+		if db.Count(time.Second*5, info.Database, entities.CollectionAdministrators, bson.D{}) > 0 {
 			if r.CanReply() {
 				if err := r.Reply(uniform.Request{
 					Error: "The collection already contains records so a master record can't be created at this point",
@@ -36,13 +36,13 @@ func init() {
 			return
 		}
 
-		db.InsertOne(time.Second * 5, info.Database, "administrators", entities.Administrator{
+		db.InsertOne(time.Second*5, info.Database, "administrators", entities.Administrator{
 			FirstName: request.FirstName,
-			LastName: request.LastName,
-			Email: request.Email,
-			Mobile: request.Mobile,
-			Password: request.Password,
-			Inverted: true,
+			LastName:  request.LastName,
+			Email:     request.Email,
+			Mobile:    request.Mobile,
+			Password:  request.Password,
+			Inverted:  true,
 		}, nil)
 
 		if r.CanReply() {

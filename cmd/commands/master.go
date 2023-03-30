@@ -17,12 +17,12 @@ func init() {
 	var password string
 
 	cmd := _base.Command("master", func(cmd *cobra.Command, args []string) {
-		service.Command("master", time.Second, _base.NatsUri, _base.CompileNatsOptions(), map[string]string{
+		service.Command("master", time.Second, _base.NatsUri, _base.CompileNatsOptions(), map[string]interface{}{
 			"firstName": firstName,
-			"lastName": lastName,
-			"email": email,
-			"mobile": mobile,
-			"password": password,
+			"lastName":  lastName,
+			"email":     email,
+			"mobile":    mobile,
+			"password":  password,
 		}, func(bytes []byte) {
 			fmt.Println(string(bytes))
 			os.Exit(0)

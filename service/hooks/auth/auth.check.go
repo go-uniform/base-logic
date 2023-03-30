@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"github.com/go-uniform/uniform/nosql"
+	"github.com/go-uniform/uniform/common/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"service/service/_base"
 	"service/service/entities"
@@ -12,18 +12,17 @@ import (
 	"time"
 )
 
-
 type CheckRequest struct {
-	Type string `bson:"type"`
+	Type       string `bson:"type"`
 	Identifier string `bson:"identifier"`
-	Reset bool `bson:"reset"`
+	Reset      bool   `bson:"reset"`
 }
 
 type CheckResponse struct {
-	Id string `bson:"_id"`
-	Password *string `bson:"password"`
+	Id        string     `bson:"_id"`
+	Password  *string    `bson:"password"`
 	BlockedAt *time.Time `bson:"blockedAt"`
-	LockedAt *time.Time `bson:"lockedAt"`
+	LockedAt  *time.Time `bson:"lockedAt"`
 }
 
 func init() {
@@ -35,7 +34,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 	var response CheckResponse
 	r.Read(&request)
 
-	db := nosql.Request(r.Conn(), p, "", true)
+	db := nosql.Connector(r.Conn(), p, info.AppService)
 	exists := false
 	db.CatchErrNoResults(func(p diary.IPage) {
 		switch strings.ToLower(request.Type) {
@@ -47,7 +46,7 @@ func eventAuthCheck(r uniform.IRequest, p diary.IPage) {
 			uniform.Alert(401, "Incorrect login details")
 		case "administrator":
 			db.FindOne(r.Remainder(), info.Database, entities.CollectionAdministrators, "", 0, bson.D{
-				{"identifier", uniform.Hash(request.Identifier, info.Salt) },
+				{"identifier", uniform.Hash(request.Identifier, info.Salt)},
 			}, &response)
 			break
 		}

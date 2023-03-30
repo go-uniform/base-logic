@@ -1,20 +1,23 @@
 module service
 
-go 1.16
+go 1.20
 
 require (
-	github.com/go-diary/diary v1.1.0
-	github.com/go-stack/stack v1.8.1 // indirect
-	github.com/go-uniform/uniform v0.0.0-20211007213035-103408234575
+	github.com/go-diary/diary v1.3.1
+	github.com/go-uniform/uniform v0.0.0-20230328202547-db6c3a936353
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang/snappy v0.0.4 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
-	github.com/nats-io/gnatsd v1.4.1 // indirect
 	github.com/nats-io/go-nats v1.7.2
-	github.com/nats-io/nkeys v0.3.0 // indirect
-	github.com/spf13/cobra v1.2.1
-	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	go.mongodb.org/mongo-driver v1.7.3
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/text v0.3.7 // indirect
+	github.com/spf13/cobra v1.6.1
+	go.mongodb.org/mongo-driver v1.11.3
+	golang.org/x/crypto v0.7.0
+)
+
+require (
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/nats-io/nkeys v0.4.4 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/testify v1.7.0 // indirect
+	golang.org/x/sys v0.6.0 // indirect
+	google.golang.org/protobuf v1.30.0 // indirect
 )

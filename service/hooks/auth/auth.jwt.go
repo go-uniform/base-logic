@@ -3,7 +3,7 @@ package auth
 import (
 	"github.com/go-diary/diary"
 	"github.com/go-uniform/uniform"
-	"github.com/go-uniform/uniform/nosql"
+	"github.com/go-uniform/uniform/common/nosql"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/url"
 	"service/service/_base"
@@ -15,18 +15,18 @@ import (
 
 type JwtRequest struct {
 	Type string `bson:"type"`
-	Id string `bson:"id"`
+	Id   string `bson:"id"`
 }
 
 type JwtResponse struct {
-	TwoFactor  bool `bson:"twoFactor"`
-	Issuer     string `bson:"issuer"`
-	Audience   string `bson:"audience"`
-	ExpiresAt  time.Time `bson:"expiresAt"`
-	ActivateAt *time.Time `bson:"activateAt"`
-	Inverted   bool `bson:"inverted"`
-	Tags       []string `bson:"tags"`
-	Links      map[string][]string `bson:"links"`
+	TwoFactor  bool                   `bson:"twoFactor"`
+	Issuer     string                 `bson:"issuer"`
+	Audience   string                 `bson:"audience"`
+	ExpiresAt  time.Time              `bson:"expiresAt"`
+	ActivateAt *time.Time             `bson:"activateAt"`
+	Inverted   bool                   `bson:"inverted"`
+	Tags       []string               `bson:"tags"`
+	Links      map[string][]string    `bson:"links"`
 	Meta       map[string]interface{} `bson:"meta"`
 }
 
@@ -44,7 +44,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 	links := make(map[string][]string)
 	meta := uniform.M{}
 
-	db := nosql.Request(r.Conn(), p, "", true)
+	db := nosql.Connector(r.Conn(), p, info.AppService)
 
 	switch strings.ToLower(request.Type) {
 	default:
@@ -78,14 +78,14 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		}
 
 		if inverted {
-			tags = uniform.Filter(denyTags, allowTags)
-			tags = uniform.Filter(tags, administrator.AllowTags)
+			tags = uniform.Filter(denyTags, allowTags, false)
+			tags = uniform.Filter(tags, administrator.AllowTags, false)
 			if administrator.DenyTags != nil {
 				tags = append(tags, administrator.DenyTags...)
 			}
 		} else {
-			tags = uniform.Filter(allowTags, denyTags)
-			tags = uniform.Filter(tags, administrator.DenyTags)
+			tags = uniform.Filter(allowTags, denyTags, false)
+			tags = uniform.Filter(tags, administrator.DenyTags, false)
 			if administrator.AllowTags != nil {
 				tags = append(tags, administrator.AllowTags...)
 			}
@@ -95,7 +95,7 @@ func eventAuthJwt(r uniform.IRequest, p diary.IPage) {
 		now := time.Now()
 		administrator.LastLoginAt = &now
 		administrator.LoginAttemptCounter = 0
-		db.UpdateOne(r.Remainder(), info.Database, entities.CollectionAdministrators, bson.D{ {"_id",administrator.Id} }, administrator, nil)
+		db.UpdateOne(r.Remainder(), info.Database, entities.CollectionAdministrators, bson.D{{"_id", administrator.Id}}, administrator, nil)
 
 		break
 	}
